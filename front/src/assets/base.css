@@ -1,0 +1,135 @@
+:root {
+  color-scheme: light;
+
+  /* Brand */
+  --ds-primary-400: #60a5fa;
+  --ds-primary-500: #2563eb;
+  --ds-primary-600: #1d4ed8;
+
+  /* Semantic */
+  --ds-success-500: #10b981;
+  --ds-warning-500: #f59e0b;
+  --ds-danger-500: #ef4444;
+
+  /* Text */
+  --ds-text-strong: #0f172a;
+  --ds-text-primary: #1e293b;
+  --ds-text-secondary: #64748b;
+  --ds-text-tertiary: #94a3b8;
+
+  /* Background */
+  --ds-bg-page: #f4f7fb;
+  --ds-bg-page-soft: #eef3f8;
+  --ds-bg-surface: #f8fbff;
+  --ds-bg-elevated: #ffffff;
+  --ds-glass-bg: rgba(255, 255, 255, 0.78);
+
+  /* Borders */
+  --ds-border-soft: rgba(148, 163, 184, 0.12);
+  --ds-border-strong: rgba(148, 163, 184, 0.18);
+
+  /* Radius */
+  --ds-radius-xs: 8px;
+  --ds-radius-sm: 10px;
+  --ds-radius-md: 14px;
+  --ds-radius-lg: 18px;
+  --ds-radius-xl: 28px;
+  --ds-radius-pill: 999px;
+
+  /* Shadow */
+  --ds-shadow-sm: 0 8px 20px rgba(15, 23, 42, 0.05);
+  --ds-shadow-md: 0 12px 30px rgba(15, 23, 42, 0.06);
+  --ds-shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.08);
+
+  /* Space */
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-7: 32px;
+  --ds-space-8: 40px;
+
+  /* Surface */
+  --ds-surface-bg: rgba(255, 255, 255, 0.94);
+  --ds-card-border: var(--ds-border-soft);
+  --ds-panel-padding: 24px;
+
+  /* Motion */
+  --ds-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ds-duration-fast: 0.16s;
+  --ds-duration-base: 0.24s;
+  --ds-duration-slow: 0.36s;
+
+  /* Legacy bridge: compatibility transition layer for component styles that
+     still read the old token names. Keep these aliases until local CSS is
+     fully migrated onto the design-system variables. */
+  --color-background: var(--ds-bg-page);
+  --color-background-soft: var(--ds-bg-surface);
+  --color-background-mute: var(--ds-bg-elevated);
+  --color-border: var(--ds-border-soft);
+  --color-border-hover: var(--ds-border-strong);
+  --color-heading: var(--ds-text-strong);
+  --color-text: var(--ds-text-primary);
+
+  font-family:
+    Inter,
+    "Segoe UI",
+    "PingFang SC",
+    "Microsoft YaHei",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(96, 165, 250, 0.16), transparent 30%),
+    linear-gradient(180deg, var(--ds-bg-page-soft) 0%, var(--ds-bg-page) 100%);
+  color: var(--ds-text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}

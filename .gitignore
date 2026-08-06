@@ -1,0 +1,79 @@
+# ── Python ──────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# ── 环境变量（绝不提交本地覆盖文件）────────────────────────────
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/.env.local
+backend/.env.*.local
+front/.env.local
+front/.env.*.local
+front/.env.production
+detection_server_agent.env
+detection_server_agent.env.local
+
+# ── 包含 SSH 凭据的运行时文件 ──────────────────────────────────
+backend/config/server_config.json
+backend/data/update_result.json
+backend/data/fetch_records.json
+
+# ── 数据库文件 ────────────────────────────────────────────────
+backend/data/*.db
+backend/*.db
+backend/user/*.db
+agent_jobs.db
+backend/data/artifacts/
+backend/data/celery/
+backend/data/starlink_tle_cache.txt
+backend/data/_heatmap_dump.json
+backend/db_backups/
+backend/tests/.tmp/
+backend/tests/tmp/
+data/
+
+# ── 后端日志 ──────────────────────────────────────────────────
+backend/logs/
+backend/control/
+control/
+
+# ── 前端构建产物 ──────────────────────────────────────────────
+front/node_modules/
+front/dist/
+front/dist-ssr/
+front/coverage/
+*.local
+*.tsbuildinfo
+
+# ── 编辑器 ────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── OS ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+
+# ── 证书与私钥（绝不提交）────────────────────────────────────
+*.pem
+*.key
+
+# ── 业务数据报告（含业务数据，不入库）──────────────────────────
+asset_data_report_*.docx

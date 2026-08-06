@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+# ⚠️ 仅供参考：新装服务器请优先使用 deploy/bootstrap-new-server.sh。
+#    本脚本为早期手工示例，与 bootstrap 的装机路径可能不一致。
+set -euo pipefail
+
+APP_ROOT="/home/ubuntu/my-map-app"
+BACKEND_DIR="$APP_ROOT/backend"
+FRONT_DIR="$APP_ROOT/front"
+STARLINK_ENV="starlink"
+
+if [[ ! -f "$BACKEND_DIR/requirements.txt" ]]; then
+	echo "ERROR: backend requirements not found: $BACKEND_DIR/requirements.txt"
+	exit 1
+fi
+
+if [[ ! -f "$FRONT_DIR/package.json" ]]; then
+	echo "ERROR: frontend package.json not found: $FRONT_DIR/package.json"
+	exit 1
+fi
+
+# Normalize CRLF if files were uploaded from Windows.
+sed -i 's/\r$//' "$APP_ROOT/deploy/systemd/"*.service.example "$APP_ROOT/deploy/systemd/enable-services.sh.example" || true
+
+CONDA_BIN=""
+if command -v conda >/dev/null 2>&1; then
+	CONDA_BIN="$(command -v conda)"
+elif [[ -x "/home/ubuntu/miniconda3/bin/conda" ]]; then
+	CONDA_BIN="/home/ubuntu/miniconda3/bin/conda"
+elif [[ -x "/opt/conda/bin/conda" ]]; then
+	CONDA_BIN="/opt/conda/bin/conda"
+fi
+
+if [[ -z "$CONDA_BIN" ]]; then
+	echo "ERROR: conda not found. Please install Miniconda/Anaconda or fix CONDA_BIN path in script."
+	exit 1
+fi
+
+NPM_BIN=""
+if command -v npm >/dev/null 2>&1; then
+	NPM_BIN="$(command -v npm)"
+elif [[ -x "/usr/bin/npm" ]]; then
+	NPM_BIN="/usr/bin/npm"
+elif [[ -x "/usr/local/bin/npm" ]]; then
+	NPM_BIN="/usr/local/bin/npm"
+fi
+
+if [[ -z "$NPM_BIN" ]]; then
+	echo "ERROR: npm not found. Please install Node.js (18+)."
+	exit 1
+fi
+
+echo "Using conda: $CONDA_BIN"
+echo "Using npm:   $NPM_BIN"
+
+# 1) Generate clean service files directly (avoid CRLF/encoding issues).
+sudo tee /etc/systemd/system/my-map-backend.service >/dev/null <<EOF
+[Unit]
+Description=My Map App Backend (Flask, conda env: $STARLINK_ENV)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=$BACKEND_DIR
+EnvironmentFile=-$BACKEND_DIR/.env.local
+Environment=PYTHONUNBUFFERED=1
+ExecStart=$CONDA_BIN run --no-capture-output -n $STARLINK_ENV python app.py
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo tee /etc/systemd/system/my-map-frontend.service >/dev/null <<EOF
+[Unit]
+Description=My Map App Frontend (Vite Preview)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=$FRONT_DIR
+Environment=HOME=/home/ubuntu
+Environment=NODE_ENV=production
+Environment=PATH=/home/ubuntu/.nvm/versions/node/v20.19.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin
+ExecStart=/home/ubuntu/.nvm/versions/node/v20.19.0/bin/npm run preview -- --host 0.0.0.0 --port 5173
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# 2) Install backend deps in conda env.
+"$CONDA_BIN" run -n "$STARLINK_ENV" pip install -r "$BACKEND_DIR/requirements.txt"
+
+# 3) Install/build frontend.
+cd "$FRONT_DIR"
+"$NPM_BIN" ci
+"$NPM_BIN" run build
+
+# 4) Reload and start services.
+sudo systemctl daemon-reload
+sudo systemctl enable my-map-backend
+sudo systemctl enable my-map-frontend
+sudo systemctl restart my-map-backend
+sudo systemctl restart my-map-frontend
+
+# 5) Status.
+sudo systemctl status my-map-backend --no-pager
+sudo systemctl status my-map-frontend --no-pager

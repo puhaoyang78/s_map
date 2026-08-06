@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <!-- PoP 点图标 - 简洁网络节点 -->
+  <defs>
+    <filter id="popGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- 外圈光晕 -->
+  <circle cx="14" cy="14" r="12" fill="#00BCD4" opacity="0.25"/>
+  <!-- 主圆 -->
+  <circle cx="14" cy="14" r="9" fill="#00ACC1" stroke="#ffffff" stroke-width="2" filter="url(#popGlow)"/>
+  <!-- 中心点 -->
+  <circle cx="14" cy="14" r="3" fill="#ffffff"/>
+</svg>

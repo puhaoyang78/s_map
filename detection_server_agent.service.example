@@ -1,0 +1,44 @@
+[Unit]
+Description=Detection Server Agent API
+After=network.target
+
+[Service]
+Type=simple
+# Keep root because the probe workflow currently depends on privileged access.
+# Put real secrets in /etc/detection-agent/agent.env instead of inline Environment= values.
+User=root
+WorkingDirectory=/home/ubuntu/agent
+EnvironmentFile=-/etc/detection-agent/agent.env
+# Validate the same EnvironmentFile before restart:
+#   python /home/ubuntu/agent/scripts/preflight_check.py --agent-env-file /etc/detection-agent/agent.env
+RuntimeDirectory=detection-agent
+RuntimeDirectoryMode=0750
+UMask=0077
+
+Environment="AGENT_LOG_FILE=/var/log/detection-agent/agent.log"
+Environment="AGENT_LOG_LEVEL=INFO"
+
+ExecStart=/usr/bin/python3 /home/ubuntu/agent/detection_server_agent.py serve --host 0.0.0.0 --port 18080
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+LimitNOFILE=65535
+
+StandardOutput=journal
+StandardError=journal
+
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectControlGroups=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+# Allow writes only to directories the current root-based workflow still needs.
+ReadWritePaths=/home/ubuntu/agent /home/ubuntu/encrypt_res /var/log/detection-agent /run/detection-agent
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <!-- Gateway 地面站图标 - 简洁卫星天线 -->
+  <defs>
+    <filter id="gwGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- 外圈光晕 -->
+  <circle cx="12" cy="12" r="10" fill="#FF7043" opacity="0.25"/>
+  <!-- 主圆 -->
+  <circle cx="12" cy="12" r="7" fill="#F4511E" stroke="#ffffff" stroke-width="2" filter="url(#gwGlow)"/>
+  <!-- 天线符号 -->
+  <path d="M8 13 L12 8 L16 13" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="12" y1="10" x2="12" y2="16" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+</svg>

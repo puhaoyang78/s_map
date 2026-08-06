@@ -1,0 +1,20 @@
+[Unit]
+Description=My Map App Backend (Flask, conda env: starlink)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/my-map-app/backend
+EnvironmentFile=/home/ubuntu/my-map-app/backend/.env
+Environment=PYTHONUNBUFFERED=1
+# 请按服务器实际安装位置修改 conda 路径
+ExecStart=/home/ubuntu/miniconda3/bin/conda run --no-capture-output -n starlink python app.py
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
